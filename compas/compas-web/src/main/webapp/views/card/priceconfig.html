@@ -1,0 +1,148 @@
+
+<div class="page" ng-controller="locationCtrl">
+	<form class="formFadeIn" role="form">
+		<section class="panel panel-default">
+			<div class="panel-heading input-sm">
+				<strong><span class="glyphicon glyphicon-th"></span> Price
+					Configuration </strong>
+			</div>
+			<div class="panel-body">
+
+				<div class="form-inline col-sm-12 noPadding">
+					<div class="form-group col-sm-6 noPadding"
+						style="padding-right: 1px">
+						<label for="programmeSelect"
+							class="col-sm-4 control-label input-sm"
+							style="text-align: right;">Select Camp</label>
+
+						<div class="col-sm-8 noPadding">
+							<select style="width: 100%" ui-select2="locationSelect"
+								ng-model="locationSelect" id="locationSelect">
+								<option data-ng-repeat="loc in locations"
+									value="{{loc.locationId}}">{{loc.locationName}}</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group col-sm-6 noPadding"
+						style="padding-right: 1px">
+						<label for="programmeSelect"
+							class="col-sm-4 control-label input-sm"
+							style="text-align: right;">Select Commodity</label>
+
+						<div class="col-sm-8 noPadding">
+						<select style="width:80%" ui-select2="serviceSelect"
+													ng-model="serviceSelect" id="serviceSelect" >
+													<option data-ng-repeat="ser in services"
+														value="{{ser.serviceId}}">{{ser.serviceName}}</option>
+												</select>
+						</div>
+					</div>
+
+				</div>
+
+
+			</div>
+		</section>
+	</form>
+	<form class="form-horizontal formFadeIn" role="form">
+	
+			<div class="panel-body">
+				<div class="form-inline ">
+
+					<div class="form-group col-sm-12 noPadding"
+						style="padding-top: 10px; padding-left: 20px;">
+						<div class="col-sm-12 noPadding" style="">
+							<section class="panel panel-default">
+								<div class="panel-heading input-sm">
+									<strong><span class="glyphicon glyphicon-th"></span>
+										Price Details</strong>
+									<button type="button" class="btn btn-primary pull-right"
+										tooltip-placement="left" tooltip="Create New Location"
+										style="margin-top: -3px; height: 25px; margin-right: -8px; width: 60px"
+										ng-click="addElementPrice()">
+										<span class="glyphicon glyphicon-plus" style="top: -2px"></span>
+									</button>
+								</div>
+								<div class="panel-body">
+									<!-- 
+										<div class="col-sm-12 noPadding">
+											<label for="programmeSelect"
+												class="col-sm-1 control-label input-sm"
+												>Select Commodity</label>
+
+											<div class="col-sm-11 noPadding">
+												<select style="width:80%" ui-select2="serviceSelect"
+													ng-model="serviceSelect" id="serviceSelect">
+													<option data-ng-repeat="ser in services"
+														value="{{ser.serviceId}}">{{ser.serviceName}}</option>
+												</select>
+											</div>
+										</div> -->
+									
+									<div class="form-inline col-sm-12 noPadding">
+										<div class="col-sm-12 noPadding" ng-repeat="detail in serDetails">
+											<div class="col-sm-4 " style="padding-top: 5px">
+												<div class="col-sm-4" style="text-align: right;">
+													<label for="serviceCode" class="control-label input-sm">UOM
+													</label>
+												</div>
+												<div class="col-sm-8 noPadding">
+													<select style="width: 100%" ui-select2=""
+														ng-model="detail.uom" id="detail.uom">
+														<option data-ng-repeat="uom in uoms"
+															ng-selected="{{uom.uomAbbr}}" value="{{uom.uomAbbr}}">{{uom.uomAbbr}}</option>
+													</select>
+												</div>
+											</div>
+
+											<div class="col-sm-4 " style="padding-top: 5px">
+												<div class="col-sm-4" style="text-align: right;">
+													<label for="serviceCode" class="control-label input-sm">Quantity
+													</label>
+												</div>
+												<div class="col-sm-8 noPadding">
+													<input type="number" class="form-control input-sm"
+														style="width: 100%" id="detail.locationCode" maxlength="4"
+														placeholder="Quantity" ng-model="detail.quantity"
+														ng-disabled="isExisting">
+												</div>
+											</div>
+											<div class="col-sm-4 noPadding" style="padding-top: 5px">
+												<div class="col-sm-4" style="text-align: right;">
+													<label for="locationName" class="control-label input-sm">
+														Max Price</label>
+												</div>
+												<div class="col-sm-8 noPadding"">
+													<input type="number" class="form-control input-sm"
+														maxlength="50" style="width: 100%"
+														id="detail.locationName" placeholder="Max Price"
+														ng-model="detail.maxPrice">
+												</div>
+											</div>
+
+										</div>
+									</div>
+								</div>
+							</section>
+						</div>
+					</div>
+
+					<div class="form-group col-sm-12 noPadding"
+						style="padding-top: 10px">
+						<div class="col-sm-offset-2 col-sm-10">
+							<button type="button" class="btn btn-success input-sm"
+								style="width: 100px" ng-click="updSer()">
+								<span class="glyphicon glyphicon-ok">Save</span>
+							</button>
+							<button type="button" class="btn btn-warning input-sm"
+								style="width: 100px" ng-click="cancelSer()">
+								<span class="glyphicon glyphicon-remove"> Cancel</span>
+							</button>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		
+	</form>
+</div>

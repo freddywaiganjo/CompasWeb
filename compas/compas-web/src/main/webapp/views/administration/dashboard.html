@@ -1,0 +1,210 @@
+<div class="page page-dashboard" ng-controller="dashBoardCtrl">
+	<!-- 	<h1>DashBoard</h1> -->
+	<!-- 	<p>Add Information</p> -->
+	<div class="row">
+		<div class="col-lg-3 col-xsm-6">
+			<div class="panel mini-box">
+				<span class="box-icon bg-info"> <i class="fa fa-users"></i>
+				</span>
+				<div class="box-info">
+					<p class="size-h2">{{userCount}}</p>
+					<p class="text-muted">
+						<span data-i18n="Users">Users</span>
+					</p>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-3 col-xsm-6">
+			<div class="panel mini-box">
+				<span class="box-icon bg-success"> <i class="fa fa-male"></i>
+				</span>
+				<div class="box-info">
+					<p class="size-h2">{{memberCount}}</p>
+					<p class="text-muted">
+						<span data-i18n="Card Holders">Card Holders</span>
+					</p>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-lg-3 col-xsm-6">
+			<div class="panel mini-box">
+				<span class="box-icon bg-danger"> <i
+					class="glyphicon glyphicon-phone"></i>
+				</span>
+				<div class="box-info">
+					<p class="size-h2">{{deviceCount}}</p>
+					<p class="text-muted">
+						<span data-i18n="Devices">Devices</span>
+					</p>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-3 col-xsm-6">
+			<div class="panel mini-box">
+				<span class="box-icon bg-success"> <i
+					class="fa fa-credit-card"></i>
+				</span>
+				<div class="box-info">
+					<p class="size-h2">{{issueCardsCount}}</p>
+					<p class="text-muted">
+						<span data-i18n="Issue Cards">Issue Cards</span>
+					</p>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<div class="row">
+		<div class="col-lg-3 col-xsm-6">
+			<section class="panel panel-box">
+				<div class="panel-top bg-warning">
+					<i class="text-medium">THB</i>
+				</div>
+				<div class="panel-bottom bg-reverse">
+					<p class="size-h4">{{sbp}}</p>
+					<p class="text-muted">Commodity Voucher Collections</p>
+				</div>
+			</section>
+
+		</div>
+		<div class="col-lg-3 col-xsm-6">
+			<section class="panel panel-box">
+				<div class="panel-top bg-facebook">
+					<i class="text-medium">THB</i>
+				</div>
+				<div class="panel-bottom bg-reverse">
+					<p class="size-h4">{{landrates}}</p>
+					<p class="text-muted">Value Voucher Collections</p>
+				</div>
+			</section>
+
+		</div>
+
+		<div class="col-lg-3 col-xsm-6">
+			<section class="panel panel-box">
+				<div class="panel-top bg-success">
+					<i class="text-medium">THB</i>
+				</div>
+				<div class="panel-bottom bg-reverse">
+					<p class="size-h4">{{pos}}</p>
+					<p class="text-muted">Cash Voucher Collection</p>
+				</div>
+			</section>
+
+		</div>
+		<div class="col-lg-3 col-xsm-6">
+			<section class="panel panel-box">
+				<div class="panel-top bg-info">
+					<i class=" text-medium">THB</i>
+				</div>
+				<div class="panel-bottom bg-reverse">
+					<p class="size-h4">{{landrates}}</p>
+					<p class="text-muted">Total Collections</p>
+				</div>
+			</section>
+
+		</div>
+
+	</div>
+	<div class="row">
+		<div class="col-md-6">
+			<section class="panel panel-default">
+				<div class="panel-heading">
+					<strong><span class="glyphicon glyphicon-th"></span> <span
+						data-i18n="Overall Commodity Collections"></span></strong>
+
+				</div>
+				<div class="panel-body">
+					<div data-flot-chart data-data="pieChart.data"
+						data-options="pieChart.options"
+						style="width: 100%; height: 400px;"></div>
+				</div>
+
+			</section>
+		</div>
+
+
+		<div class="col-md-6">
+
+
+		
+				<section class="panel panel-default">
+					<div class="panel-heading">
+						<strong><span class="glyphicon glyphicon-th"></span> <span
+							data-i18n="RETAILER COLLECTIONS"></span></strong>
+					</div>
+					<div class="panel-body" agentchart style="width: 100%; height: 425px;">
+						<div  data-flot-chart data-data="data"
+							data-options="donutChart2.options"
+							 ></div>
+					</div>
+				</section>
+			
+
+		</div>
+	</div>
+	<div class="row" ng-hide="true">
+		<div class="col-md-12">
+			<section class="panel panel-default">
+				<div class="panel-heading">
+					<strong><span class="glyphicon glyphicon-th"></span> <span
+						data-i18n="Transactions"></span></strong>
+				</div>
+				<div class="panel-body" data-ng-controller="dashBoardCtrl">
+
+					<div line-Chart data-data="data" data-type="line" data-xkey="year"
+						data-ykeys='["a", "b", "c"]'
+						data-labels='["Load", "Purchase", "Total"]'
+						data-line-colors='["#FF7857","#FDD764","#A3C86D"]'
+						data-line-width="2"></div>
+				</div>
+			</section>
+		</div>
+
+	</div>
+	<div class="row" ng-hide="true">
+		<div class="col-sm-4">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">Commodity Vouchers</h3>
+				</div>
+				<div class="panel-body text-center">
+					<div easypiechart options="easypiechart3.options"
+						percent="cmPercentage" class="easypiechart">
+						<span class="pie-percent" ng-bind="cmPercentage"></span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">Value Vouchers</h3>
+				</div>
+				<div class="panel-body text-center">
+					<div easypiechart options="easypiechart4.options"
+						percent="vaPercentage" class="easypiechart">
+						<span class="pie-percent" ng-bind="vaPercentage"></span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h3 class="panel-title">Cash Vouchers</h3>
+				</div>
+				<div class="panel-body text-center">
+					<div easypiechart options="easypiechart5.options"
+						percent="caPercentage" class="easypiechart">
+						<span class="pie-percent" ng-bind="caPercentage"></span>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+	</div>
+
+</div>

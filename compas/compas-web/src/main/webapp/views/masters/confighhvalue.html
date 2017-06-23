@@ -1,0 +1,128 @@
+<div class="page" ng-controller="confighhvalueCtrl">
+
+	<form role="form" class="form-horizontal formFadeIn"
+		ng-hide="bnfgrpEditMode">
+		<section class="panel panel-default table-dynamic">
+			<div class="panel-heading input-sm">
+				<strong><span class="glyphicon glyphicon-th"></span>
+					Vulnerability Criteria's List</strong>
+				<button type="button" class="btn btn-primary pull-right"
+					tooltip-placement="left" tooltip="Create New Beneficiary Group"
+					style="margin-top: -3px; height: 25px; margin-right: -8px; width: 60px"
+					ng-click="addBnfgrp()">
+					<span class="glyphicon glyphicon-plus" style="top: -2px"></span>
+				</button>
+			</div>
+
+			<div class="panel-body">
+				<div class="form-inline col-sm-12 noPadding">
+
+
+					<div class="form-group col-sm-6 noPadding"
+						style="padding-right: 1px">
+						<label for="programmeSelect"
+							class="col-sm-4 control-label input-sm"
+							style="text-align: right;">Select Card Holder Group</label>
+
+						<div class="col-sm-8 noPadding">
+							<select style="width: 100%" ui-select2="" ng-model="bnfGrpSelect"
+								ng-change="onBnfGrpChange(bnfGrpSelect)" id="bnfGrpSelect">
+								<option data-ng-repeat="bnf in bnfgrps"
+									ng-selected="{{bnf.bnfGrpId}}" value="{{bnf.bnfGrpId}}">{{bnf.bnfGrpName}}</option>
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-group col-sm-12 noPadding" style="padding-top: 10px">
+				<!-- Services Grid -->
+				<div class="col-sm-12 noPadding" style="padding-left: 5px;">
+					<section class="panel panel-default">
+						<!-- 	<div class="panel-heading input-sm">
+									<strong><span class="glyphicon glyphicon-th"></span>
+										Benefit Basket Info</strong>
+								</div> -->
+						<div class="panel-body"
+							style="max-height: 400px; overflow-y: auto;">
+							<accordion close-others="oneAtATime" class="ui-accordion ">
+							<accordion-group heading="Please Enter Cash Details"
+								is-open="true">
+							<table
+								class="table table-bordered table-striped table-responsive input-sm">
+								<thead>
+									<tr>
+										<th><input type="checkbox" ng-model="checkSelect.allItemsSelected"
+											ng-change="selectAllLocations()"></th>
+										<th style="width: 15px;"></th>
+										<th><div class="th">Cash Allocation Details</div></th>
+										<th><div class="th">Cash</div></th>
+						
+									</tr>
+								</thead>
+								<tbody ng-repeat="basket in locAgeGrps">
+									<tr>
+										<td><input type="checkbox" ng-model="basket.isActive"
+											ng-checked="basket.isActive" ng-change="selectLocation($index)"></td>
+										<td>
+											<button type="button" class="btn btn-info"
+												ng-if="basket.expanded" style="height: 25px;"
+												tooltip-placement="top"
+												tooltip="Modify {{programme.programmeDesc}}"
+												ng-click="basket.expanded = false">
+												<span class="glyphicon glyphicon-plus" style="top: -2px;"></span>
+											</button>
+											<button type="button" class="btn btn-info"
+												ng-if="!basket.expanded" style="height: 25px;"
+												tooltip-placement="top"
+												tooltip="Modify {{programme.programmeDesc}}"
+												ng-click="basket.expanded = true">
+												<span class="glyphicon glyphicon-plus" style="top: -2px;"></span>
+											</button> <!-- <button ng-if="basket.expanded"
+														ng-click="basket.expanded = false">-</button>
+													<button ng-if="!basket.expanded"
+														ng-click="basket.expanded = true">+</button> -->
+										</td>
+										<td>{{basket.locationName}}</td>
+										<td></td>
+
+
+									</tr>
+									<tr ng-if="basket.expanded"
+										ng-repeat="(i, service)  in basket.ageGroups track by $index"
+										style="background-color: #eef8fc; color: #26929c">
+										<td colspan="2"></td>
+
+										<td>{{service.ageGrpDesc}}</td>
+
+										<td><input type="text" class="form-control input-sm"
+											ng-model="basket.ageGroups[i].cash" placeholder="Cash"
+											style="text-align: right; color: #26929c" ng-disabled="false" /></td>
+									</tr>
+								</tbody>
+							</table>
+							</accordion-group> </accordion>
+						</div>
+					</section>
+				</div>
+
+
+				<!-- Buttons -->
+				<div class="form-group">
+					<div class="col-sm-offset-2 col-sm-10">
+						<button type="button" class="btn btn-success input-sm"
+							style="width: 100px" ng-click="updAgegrpDtl()">
+							<span class="glyphicon glyphicon-ok"> Save </span>
+						</button>
+						<button type="button" class="btn btn-warning input-sm"
+							style="width: 100px" ng-click="calcelAgegrpDtl()">
+							<span class="glyphicon glyphicon-remove"> Cancel </span>
+						</button>
+					</div>
+				</div>
+			</div>
+		</section>
+	</form>
+
+
+
+</div>
