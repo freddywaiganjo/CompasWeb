@@ -31,7 +31,6 @@
       </plugins>
     </pluginManagement>
   </build>
-  <!-------->
   <!--<distributionManagement>
     <repository>
       <uniqueVersion>false</uniqueVersion>
