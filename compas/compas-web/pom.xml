@@ -87,7 +87,7 @@
 			  <path>compas.war</path>
 			  <username>admin</username>
 			  <password>admin</password>
-   </configuration>  CONFIGURE TOMCAT-->
+   </configuration> -->
 				</configuration>
 			</plugin>
 			<plugin>
