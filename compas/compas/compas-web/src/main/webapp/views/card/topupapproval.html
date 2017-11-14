@@ -1,0 +1,233 @@
+<div class="page" ng-controller="topupApprovalCtrl">
+	<form class="form-horizontal formFadeIn" role="form">
+		<section class="panel panel-default">
+
+			<!--Start topup type selection-->
+
+			<div class="panel-heading input-sm">
+				<strong><span class="glyphicon glyphicon-th"></span> Budget Approval
+					</strong>
+			</div>
+			<div class="panel-body">
+				<div class="form-group col-sm-12 noPadding">
+					<!-- category code -->
+					<div class="col-sm-6 noPadding">
+						<div class="col-sm-4" style="text-align: right;">
+							<label for="inpCatCode" class="control-label input-sm">
+								From Date</label>
+						</div>
+
+						<div class="col-sm-8 noPadding" ng-controller="DatepickerDemoCtrl">
+							<div class="input-group ui-datepicker">
+								<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+								<input type="text" placeholder="Select Date"
+									class="form-control" datepicker-popup="{{format}}"
+									ng-model="mem.FromDt" is-open="opened" min="minDate"
+									max="'2020-12-30'" datepicker-options="dateOptions"
+									date-disabled="disabled(date, mode)" ng-required="true"
+									close-text="Close">
+							</div>
+						</div>
+						<!-- 	<input type="text" id='newFrDt' class="ng-binding" ng-model="mem.FromDt" ng-value="{{mem.FromDt | date:'shortDate'}}"  /> -->
+					</div>
+					<!-- category Name -->
+					<div class="col-sm-6 noPadding">
+						<div class="col-sm-4" style="text-align: right;">
+							<label for="inpCatName" class="control-label input-sm">
+								To Date</label>
+						</div>
+						<div class="col-sm-8 noPadding" ng-controller="DatepickerDemoCtrl">
+							<div class="input-group ui-datepicker">
+								<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+								<input type="text" class="form-control"
+									datepicker-popup="{{format}}" placeholder="Select Date"
+									ng-model="mem.ToDt" min="minDate" max="'2020-12-30'"
+									datepicker-options="dateOptions"
+									date-disabled="disabled(date, mode)" ng-required="true"
+									close-text="Close">
+							</div>
+						</div>
+					</div>
+
+				</div>
+				<div class="form-group col-sm-12 noPadding">
+					<!-- category code -->
+
+					<div class="col-sm-12 noPadding">
+						<div class="col-sm-2" style="text-align: right;">
+							<label for="bnfGrpSelect" class="control-label input-sm"
+								style="text-align: right;">Camp</label>
+						</div>
+						<div class="col-sm-10 noPadding">
+							<select style="width: 100%" ui-select2="locationSelect"
+								ng-model="locationSelect" id="locationSelect">
+								<option data-ng-repeat="loc in locations"
+									value="{{loc.locationId}}">{{loc.locationName}}</option>
+							</select>
+						</div>
+					</div>
+
+				</div>
+
+				<div class="form-group" style="margin-left: 200px">
+					<div class="col-sm-offset-2 col-sm-10">
+						<button type="button" class="btn btn-success input-sm"
+							style="width: 100px" ng-click="preview()">
+							<span class="glyphicon glyphicon-ok"> Preview </span>
+						</button>
+
+					</div>
+
+				</div>
+			</div>
+
+		</section>
+	</form>
+	<form role="form" class="formFadeIn" ng-hide="showTopupDetails">
+		<section class="panel panel-default table-dynamic">
+			<div class="panel-heading input-sm">
+				<strong><span class="glyphicon glyphicon-th"></span> Budget Approval
+					Details</strong>
+
+			</div>
+
+			<div class="table-filters">
+				<div class="row">
+					<div class="col-sm-4 col-xs-6">
+						<form>
+							<input type="text" placeholder="search"
+								class="form-control input-sm" data-ng-model="searchKeywords"
+								data-ng-keyup="search()">
+						</form>
+					</div>
+					<div class="col-sm-3 col-xs-6 filter-result-info input-sm">
+						<span> Showing {{filteredTopups.length}}/{{topups.length}}
+							entries </span>
+					</div>
+				</div>
+			</div>
+			<div class="panel-body">
+				<div class="form-inline col-sm-12 noPadding">
+					<table
+						class="table table-bordered table-striped table-responsive input-sm">
+						<thead>
+							<tr>
+								<th style="width: 50px; margin-left: 5px"><input
+									type="checkbox" ng-model="allTopupSelected"
+									style="margin-left: 6px" ng-change="selectAllTopup()">
+								</th>
+								<th>
+									<div class="th">
+										# <span class="glyphicon glyphicon-chevron-up"
+											data-ng-click=" order('count') "
+											data-ng-class="{active: row == 'count'}"></span><span
+											class="glyphicon glyphicon-chevron-down"
+											data-ng-click=" order('-count') "
+											data-ng-class="{active: row == '-count'}"></span>
+									</div>
+								</th>
+								<th>
+									<div class="th">
+										Vulnerability Criteria <span
+											class="glyphicon glyphicon-chevron-up"
+											data-ng-click=" order('bnfGrpname') "
+											data-ng-class="{active: row == 'bnfGrpname'}"></span><span
+											class="glyphicon glyphicon-chevron-down"
+											data-ng-click=" order('-bnfGrpname') "
+											data-ng-class="{active: row == '-bnfGrpname'}"></span>
+									</div>
+								</th>
+
+								<th>
+									<div class="th">
+										No of Card Holders<span class="glyphicon glyphicon-chevron-up"
+											data-ng-click=" order('programme_name') "
+											data-ng-class="{active: row == 'programme_name'}"></span><span
+											class="glyphicon glyphicon-chevron-down"
+											data-ng-click=" order('-programme_name') "
+											data-ng-class="{active: row == '-programme_name'}"></span>
+									</div>
+								</th>
+								<th>
+									<div class="th">
+										Allocation Date<span class="glyphicon glyphicon-chevron-up"
+											data-ng-click=" order('voucherName') "
+											data-ng-class="{active: row == 'voucherName'}"></span><span
+											class="glyphicon glyphicon-chevron-down"
+											data-ng-click=" order('-voucherName') "
+											data-ng-class="{active: row == '-voucherName'}"></span>
+									</div>
+								</th>
+								<th>
+									<div class="th">
+										 Allocation Value<span class="glyphicon glyphicon-chevron-up"
+											data-ng-click=" order('service_name') "
+											data-ng-class="{active: row == 'service_name'}"></span><span
+											class="glyphicon glyphicon-chevron-down"
+											data-ng-click=" order('-service_name') "
+											data-ng-class="{active: row == '-service_name'}"></span>
+									</div>
+								</th>
+
+
+							</tr>
+						</thead>
+						<tbody>
+							<tr data-ng-repeat="topup in currentPageTopups">
+								<td><input type="checkbox" ng-model="topup.isActive"
+									ng-checked="topup.isActive" ng-change="selectTopup($index)"></td>
+								<td>{{topup.count}}</td>
+								<td>{{topup.bnfGrpName}}</td>
+								<td>{{topup.noOfBnfs}}</td>
+								<td>{{topup.lastTopup}}</td>
+								<td>{{topup.topupValueDisplay}}</td>
+
+
+							</tr>
+							<tr>
+								<td colspan="5"></td>
+
+
+
+								<td style="font-size: 18px;font-weight: bolder;color: black;">Total: {{total | number : fractionSize}}</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<footer class="table-footer input-sm">
+
+						<div class="row">
+							<div class="col-md-6 page-num-info">
+								<span> Show <select data-ng-model="numPerPage"
+									data-ng-options="num for num in numPerPageOpt"
+									data-ng-change="onNumPerPageChange()"></select> entries per
+									page
+								</span>
+							</div>
+							<div class="col-md-6 text-right pagination-container">
+								<pagination class="pagination-sm" page="currentPage"
+									total-items="filteredTopups.length" max-size="4"
+									on-select-page="select(page)" items-per-page="numPerPage"
+									rotate="false" boundary-links="true"></pagination>
+							</div>
+						</div>
+					</footer>
+				</div>
+				<div class="form-group" style="margin-left: 200px">
+					<div class="col-sm-offset-2 col-sm-10">
+						<button type="button" class="btn btn-success input-sm"
+							style="width: 100px" ng-click="approve()">
+							<span class="glyphicon glyphicon-ok"> Approve </span>
+						</button>
+						<button type="button" class="btn btn-warning input-sm"
+							style="width: 100px" ng-click="cancelapprove()">
+							<span class="glyphicon glyphicon-ok"> Cancel </span>
+						</button>
+					</div>
+
+				</div>
+			</div>
+
+		</section>
+	</form>
+</div>

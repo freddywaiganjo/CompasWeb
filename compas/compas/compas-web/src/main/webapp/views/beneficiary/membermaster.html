@@ -1,0 +1,836 @@
+<html>
+<head>
+<style type="text/css">
+.cropArea {
+	background: #E4E4E4;
+	overflow: hidden;
+	width: 300px;
+	height: 250px;
+}
+</style>
+
+</head>
+</html>
+
+<div class="page" ng-controller="membersCtrl">
+	<form class="form-horizontal formFadeIn" role="form"
+		ng-hide="showTopupCreation">
+		<section class="panel panel-default">
+
+			<!--Start topup type selection-->
+
+			<div class="panel-heading input-sm">
+				<strong><span class="glyphicon glyphicon-th"></span>
+					Camp </strong>
+			</div>
+			<div class="panel-body">
+				<div class="form-inline col-sm-12 noPadding">
+
+					<div class="form-group col-sm-12 noPadding"
+						style="padding-right: 1px">
+						<label for="topupTypeSelect"
+							class="col-sm-2 control-label input-sm"
+							style="text-align: right;">Select Camp</label>
+
+						<div class="col-sm-10 noPadding">
+							<select style="width: 100%" ui-select2="locationSelect"
+								ng-model="locationSelect" id="locationSelect"
+							>
+								<option data-ng-repeat="loc in locations"
+									value="{{loc.locationId}}">{{loc.locationName}}</option>
+							</select>
+						</div>
+					</div>
+					
+				</div>
+			</div>
+		</section>
+	</form>
+	<form role="form" class="formFadeIn" ng-hide="memberEditMode == true">
+		<div>
+
+			<section class="panel panel-default table-dynamic">
+				<div class="panel-heading input-sm">
+					<strong><span class="glyphicon glyphicon-th input-sm "></span>
+						Card Holder's List</strong>
+					<button type="button" class="btn btn-primary pull-right input-sm"
+						tooltip-placement="left" tooltip="Create New Card Holder"
+						style="margin-top: -3px; height: 25px; margin-right: -8px; width: 60px"
+						ng-click="addMember()">
+						<span class="glyphicon glyphicon-plus" style="top: -2px"></span>
+					</button>
+				</div>
+
+				<div class="table-filters">
+					<div class="row">
+						<div class="col-sm-4 col-xs-6">
+							<form>
+								<input type="text" placeholder="search"
+									class="form-control input-sm" data-ng-model="searchKeywords"
+									data-ng-keyup="search()">
+							</form>
+						</div>
+						<div class="col-sm-3 col-xs-6 filter-result-info">
+							<span class="input-sm"> Showing
+								{{filteredMembers.length}}/{{members.length}} entries </span>
+						</div>
+					</div>
+				</div>
+
+				<table
+					class="table table-bordered table-striped table-responsive input-sm">
+					<thead>
+						<tr>
+
+							<th>
+								<div class="th">
+									# <span class="glyphicon glyphicon-chevron-up"
+										data-ng-click=" order('count') "
+										data-ng-class="{active: row == 'count'}"></span> <span
+										class="glyphicon glyphicon-chevron-down"
+										data-ng-click=" order('-count') "
+										data-ng-class="{active: row == '-count'}"></span>
+								</div>
+							</th>
+							<th>
+								<div class="th">
+									Ration No <span class="glyphicon glyphicon-chevron-up"
+										data-ng-click=" order('idPassPortNo') "
+										data-ng-class="{active: row == 'idPassPortNo'}"></span> <span
+										class="glyphicon glyphicon-chevron-down"
+										data-ng-click=" order('-idPassPortNo') "
+										data-ng-class="{active: row == '-idPassPortNo'}"></span>
+								</div>
+							</th>
+							<th>
+								<div class="th">
+									Full Name <span class="glyphicon glyphicon-chevron-up"
+										data-ng-click=" order('firstName') "
+										data-ng-class="{active: row == 'firstName'}"></span> <span
+										class="glyphicon glyphicon-chevron-down"
+										data-ng-click=" order('-firstName') "
+										data-ng-class="{active: row == '-firstName'}"></span>
+								</div>
+							</th>
+							<th ng-hide="true">
+								<div class="th">
+									Last Name <span class="glyphicon glyphicon-chevron-up"
+										data-ng-click=" order('lastName') "
+										data-ng-class="{active: row == 'lastName'}"></span> <span
+										class="glyphicon glyphicon-chevron-down"
+										data-ng-click=" order('-lastName') "
+										data-ng-class="{active: row == '-lastName'}"></span>
+								</div>
+							</th>
+							<th>
+								<div class="th">
+									Date Of Birth <span class="glyphicon glyphicon-chevron-up"
+										data-ng-click=" order('dateOfBirth') "
+										data-ng-class="{active: row == 'dateOfBirth'}"></span> <span
+										class="glyphicon glyphicon-chevron-down"
+										data-ng-click=" order('-dateOfBirth') "
+										data-ng-class="{active: row == '-dateOfBirth'}"></span>
+								</div>
+							</th>
+							<th>
+								<div class="th">
+									Phone No <span class="glyphicon glyphicon-chevron-up"
+										data-ng-click=" order('cellPhone') "
+										data-ng-class="{active: row == 'cellPhone'}"></span> <span
+										class="glyphicon glyphicon-chevron-down"
+										data-ng-click=" order('-cellPhone') "
+										data-ng-class="{active: row == '-cellPhone'}"></span>
+								</div>
+							</th>
+							<th>
+								<div class="th">
+									Vulnerability Criteria<span
+										class="glyphicon glyphicon-chevron-up"
+										data-ng-click=" order('bnfGrpName') "
+										data-ng-class="{active: row == 'bnfGrpName'}"></span> <span
+										class="glyphicon glyphicon-chevron-down"
+										data-ng-click=" order('-bnfGrpName') "
+										data-ng-class="{active: row == '-bnfGrpName'}"></span>
+								</div>
+							</th>
+							<th ng-hide="true">
+								<div class="th">
+									Topup Count(VC)<span class="glyphicon glyphicon-chevron-up"
+										data-ng-click=" order('topupCount') "
+										data-ng-class="{active: row == 'topupCount'}"></span> <span
+										class="glyphicon glyphicon-chevron-down"
+										data-ng-click=" order('-topupCount') "
+										data-ng-class="{active: row == '-topupCount'}"></span>
+								</div>
+							</th>
+							<th ng-hide="true">
+								<div class="th">
+									Enroll Status <span class="glyphicon glyphicon-chevron-up"
+										data-ng-click=" order('bioStatus') "
+										data-ng-class="{active: row == 'bioStatus'}"></span> <span
+										class="glyphicon glyphicon-chevron-down"
+										data-ng-click=" order('-bioStatus') "
+										data-ng-class="{active: row == '-bioStatus'}"></span>
+								</div>
+							</th>
+							<th style="width: 60px"></th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr data-ng-repeat="member in currentPageMembers">
+							<td>{{member.count}}</td>
+							<td>{{member.idPassPortNo}}</td>
+							<td>{{member.firstName}}</td>
+							<td ng-hide="true">{{member.surName}}</td>
+							<td>{{member.dateOfBirth}}</td>
+							<td>{{member.cellPhone}}</td>
+							<td>{{member.bnfGrpName}}</td>
+							<td ng-hide="true">{{member.topupCount}}</td>
+							<td ng-hide="true">{{member.bioStatus}}</td>
+							<td style="padding: 1px;">
+								<button type="button" class="btn btn-success"
+									tooltip-placement="top"
+									tooltip="Modify {{member.idPassPortNo}}"
+									style="height: 25px; width: 60px;"
+									ng-click="editMember(member)">
+									<span class="glyphicon glyphicon-pencil" style="top: -2px;"></span>
+								</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<footer class="table-footer input-sm">
+					<div class="row">
+						<div class="col-md-6 page-num-info">
+							<span> Show <select data-ng-model="numPerPage"
+								data-ng-options="num for num in numPerPageOpt"
+								data-ng-change="onNumPerPageChange()">
+							</select> entries per page
+							</span>
+						</div>
+						<div class="col-md-6 text-right pagination-container">
+							<pagination class="pagination-sm" page="currentPage"
+								total-items="filteredMembers.length" max-size="5"
+								on-select-page="select(page)" items-per-page="numPerPage"
+								rotate="false" boundary-links="true"></pagination>
+						</div>
+					</div>
+				</footer>
+			</section>
+		</div>
+	</form>
+	<form class="form-horizontal formFadeIn" role="form"
+		ng-hide="memberDetailMode">
+		<section class="panel panel-default">
+			<button type="button" class="btn btn-primary pull-right input-sm"
+				ng-hide="true" tooltip-placement="left" tooltip="Fill Dummy Data"
+				style="margin-top: 2px; height: 25px; margin-right: 1px; width: 150px"
+				ng-click="fillData()">
+				<span class="" style="top: -2px">Fill Dummy Data</span>
+			</button>
+			<div class="panel-heading input-sm">
+				<strong><span class="glyphicon glyphicon-th input-sm"></span>
+					Card Holder Details</strong>
+
+
+			</div>
+
+			<div class="panel-body">
+
+				<div class="form-group col-sm-12 noPadding">
+
+					<div class="col-sm-6 noPadding">
+						<div class="col-sm-4" style="text-align: right;">
+							<label for="inpMemberName" class="control-label input-sm">Full
+								Name</label>
+						</div>
+						<div class="col-sm-8">
+							<input type="text" class="form-control input-sm"
+								ng-disabled="isDisabled" id="inpMemberName"
+								placeholder="Full Name" ng-model="firstName">
+						</div>
+					</div>
+					<div class="col-sm-6 noPadding">
+						<div class="col-sm-4" style="text-align: right;">
+							<label for="inpMemberTitle" class="control-label input-sm">Title</label>
+						</div>
+						<div class="col-sm-8">
+							<input type="text" class="form-control input-sm"
+								id="inpMemberTitle" placeholder="Title" ng-model="title">
+						</div>
+					</div>
+
+
+				</div>
+				<div class="form-group col-sm-12 noPadding" ng-hide="true">
+					<div class="col-sm-6 noPadding">
+						<div class="col-sm-4" style="text-align: right;">
+							<label for="inpMemberOtherName" class="control-label input-sm">Middle
+								Name</label>
+						</div>
+						<div class="col-sm-8">
+							<input type="text" class="form-control input-sm"
+								id="inpMemberOtherName" placeholder="Other Names"
+								ng-model="otherName">
+						</div>
+					</div>
+
+
+				</div>
+				<div class="form-group col-sm-12 noPadding">
+					<div class="col-sm-6 noPadding">
+						<div class="col-sm-4" style="text-align: right;">
+							<label for="inpMemberIdPassPortNo" class="control-label input-sm">Ration
+								No </label>
+						</div>
+						<div class="col-sm-8">
+							<input type="text" class="form-control input-sm"
+								ng-disabled="isDisabled" id="inpMemberIdPassPortNo"
+								placeholder="ID or Passport No" ng-model="idPassPortNo">
+						</div>
+					</div>
+					<div class="col-sm-6 noPadding">
+						<div class="col-sm-4" style="text-align: right;">
+							<label for="inpMemberOtherName" class="control-label input-sm">Gender</label>
+						</div>
+						<div class="col-sm-8">
+							<div class="col-sm-4 noPadding">
+								<div class="col-sm-12">
+									<label> <input type="checkbox" id="male"
+										style="margin-top: 10px" ng-model="male">
+									</label> <span>Male</span>
+								</div>
+
+							</div>
+							<div class="col-sm-4 noPadding">
+								<div class="col-sm-12">
+									<label> <input type="checkbox" id="feMale"
+										ng-model="feMale" style="margin-top: 10px">
+									</label> <span>Female</span>
+								</div>
+
+
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-group col-sm-12 noPadding">
+					<div class="col-sm-6 noPadding">
+						<div class="col-sm-4" style="text-align: right;">
+							<label for="inpMemberDob" class="control-label input-sm">Date
+								Of Birth </label>
+						</div>
+						<div class="col-sm-8" ng-controller="DatepickerDemoCtrl">
+							<div class="input-group ui-datepicker">
+								<span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+								<input type="text" class="form-control"
+									datepicker-popup="{{format}}" placeholder="Select Date"
+									ng-model="mem.dateOfBirth" min="minDate" max="'2020-12-30'"
+									datepicker-options="dateOptions"
+									date-disabled="disabled(date, mode)" ng-required="true"
+									close-text="Close">
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-6 noPadding">
+						<div class="col-sm-4" style="text-align: right;">
+							<label for="inpMemberMaritalStatus"
+								class="control-label input-sm">Marital Status</label>
+						</div>
+						<div class="col-sm-8">
+							<input type="text" class="form-control input-sm"
+								id="inpMemberMaritalStatus" placeholder="Marital Status"
+								ng-model="maritalStatus">
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group col-sm-12 noPadding">
+					<div class="col-sm-6 noPadding">
+						<div class="col-sm-4" style="text-align: right;">
+							<label for="inpMemberWeight" class="control-label input-sm">Weight</label>
+						</div>
+						<div class="col-sm-8">
+							<input type="text" class="form-control input-sm"
+								id="inpMemberWeight" placeholder="Weight" ng-model="weight">
+						</div>
+					</div>
+					<div class="col-sm-6 noPadding">
+						<div class="col-sm-4" style="text-align: right;">
+							<label for="inpMemberHeight" class="control-label input-sm">Height</label>
+						</div>
+						<div class="col-sm-8">
+							<input type="text" class="form-control input-sm"
+								id="inpMemberHeight" placeholder="Height" ng-model="height">
+						</div>
+					</div>
+
+				</div>
+
+				<div class="form-group col-sm-12 noPadding" ng-hide="true">
+					<div class="col-sm-6 noPadding">
+						<div class="col-sm-4" style="text-align: right;">
+							<label for="inpMemberNhifNo" class="control-label input-sm">NHIF
+								No.</label>
+						</div>
+						<div class="col-sm-8">
+							<input type="text" class="form-control input-sm"
+								id="inpMemberNhifNo" placeholder="NHIF No" ng-model="nhifNo">
+						</div>
+					</div>
+					<div class="col-sm-6 noPadding">
+						<div class="col-sm-4" style="text-align: right;">
+							<label for="inpMemberEmployer" class="control-label input-sm">Name
+								of employer (if applicable)</label>
+						</div>
+						<div class="col-sm-8">
+							<input type="text" class="form-control input-sm"
+								id="inpMemberEmployer" placeholder="Name of employer"
+								ng-model="employerName">
+						</div>
+					</div>
+
+				</div>
+				<div class="form-group col-sm-12 noPadding">
+					<div class="col-sm-6 noPadding">
+						<div class="col-sm-4" style="text-align: right;">
+							<label for="inpMemberNationality" class="control-label input-sm">
+								Family Size</label>
+						</div>
+						<div class="col-sm-8">
+							<input type="number" class="form-control input-sm"
+								id="inpMemberNationality" placeholder="Family Size"
+								ng-model="familySize">
+						</div>
+					</div>
+					<div class="col-sm-6 noPadding" ng-hide="true">
+						<div class="col-sm-4" style="text-align: right;">
+							<label for="inpMemberOccupation" class="control-label input-sm">Occupation</label>
+						</div>
+						<div class="col-sm-8">
+							<input type="text" class="form-control input-sm"
+								id="inpMemberOccupation" placeholder="Occupation"
+								ng-model="occupation">
+						</div>
+					</div>
+					<div class="col-sm-6 noPadding">
+						<div class="col-sm-4" style="text-align: right;">
+							<label for="inpMemberNationality" class="control-label input-sm">Nationality</label>
+						</div>
+						<div class="col-sm-8">
+							<input type="text" class="form-control input-sm"
+								id="inpMemberNationality" placeholder="Nationality"
+								ng-model="nationality">
+						</div>
+					</div>
+
+				</div>
+
+			</div>
+
+
+
+			<div class="panel-heading input-sm" ng-hide="true">
+				<strong><span class="glyphicon glyphicon-th"></span> Add
+					Family Members</strong>
+			</div>
+			<div class="panel-body" ng-hide="true">
+				<div class="form-group col-sm-12 noPadding">
+					<div class="col-sm-6 noPadding">
+						<div class="col-sm-4" style="text-align: right;">
+							<label for="inpMemberOtherName" class="control-label input-sm">Family
+								Size</label>
+						</div>
+						<div class="col-sm-8">
+							<label> <input type="checkbox" id="male"
+								style="margin-top: 10px" ng-model="household">
+							</label> <span>Household</span>
+						</div>
+
+					</div>
+
+
+				</div>
+				<div class="form-group col-sm-12 noPadding"
+					style="padding-top: 10px; padding-right: 40px">
+					<div class="col-sm-4 noPadding">
+						<div class="col-sm-5" style="text-align: right;">
+							<label for="serviceSelect" class="control-label input-sm">
+								First Name</label>
+						</div>
+						<div class="col-sm-7 noPadding">
+							<input type="text" ng-model="entry.familyMemFirstName"
+								placeholder="First Name" class="form-control input-sm"
+								id="entry.familyMemFirstName" style="width: 100%" />
+						</div>
+					</div>
+
+					<div class="col-sm-4 noPadding">
+						<div class="col-sm-5" style="text-align: right;">
+							<label for="ipQuantity" class="control-label input-sm">Last
+								Name</label>
+						</div>
+						<div class="col-sm-7 noPadding">
+							<input type="text" ng-model="entry.familyMemLastName"
+								placeholder="last Name" class="form-control input-sm"
+								id="entry.familyMemLastName" style="width: 100%" />
+						</div>
+					</div>
+
+					<div class="col-sm-4 noPadding">
+						<div class="col-sm-5" style="text-align: right;">
+							<label for="inpRelation" class="control-label input-sm">Relation</label>
+						</div>
+						<div class="col-sm-7 noPadding">
+							<div class="input-group">
+								<select style="width: 100%" ui-select2="entry.relationId"
+									ng-model="entry.relationId" id="entry.relationId">
+									<option ng-repeat="relation in relations"
+										value="{{relation.relationId}}">{{relation.relationDesc}}</option>
+								</select><span class="input-group-btn">
+									<button class="btn btn-primary input-sm" type="button"
+										tooltip-placement="top" tooltip="Submit Entry"
+										ng-click="addEntry()">
+										<span class="glyphicon glyphicon-plus"></span>
+									</button>
+									<button class="btn btn-warning input-sm" type="button"
+										tooltip-placement="top" tooltip="Clear  Entry"
+										ng-click="clearEntry(entry)">
+										<span class="glyphicon glyphicon-minus"></span>
+									</button>
+								</span>
+							</div>
+						</div>
+					</div>
+
+				</div>
+				<div class="form-group col-sm-12 noPadding"
+					style="max-height: 400px; overflow-y: scroll; width: 90%; margin-left: 25px">
+					<table
+						class="table table-bordered table-striped table-responsive input-sm">
+						<thead>
+							<tr>
+
+								<th style="width: 100px">
+									<div class="th">First Name</div>
+								</th>
+								<th style="width: 100px">
+									<div class="th">Last Name</div>
+								</th>
+								<th style="width: 92px">
+									<div class="th">Relation</div>
+								</th>
+
+
+							</tr>
+						</thead>
+						<tbody>
+							<tr
+								data-ng-repeat="(i, memEntry) in famMemEntries track by $index">
+
+								<td
+									ng-style="{'background-color': '#eef8fc', 'color': '#26929c'}"><input
+									type="text" class="form-control input-sm" placeholder="0.00"
+									ng-model="famMemEntries[i].familyMemFirstName"
+									ng-disabled="!famMemEntries[i].editMode"
+									ng-style="{'color': '#26929c'}" /></td>
+								<td style="width: 105px"
+									ng-style="{'background-color': '#eef8fc', 'color': '#26929c'}"><input
+									type="text" ng-model="famMemEntries[i].familyMemLastName"
+									placeholder="0.00" class="form-control input-sm text-right"
+									ng-disabled="!famMemEntries[i].editMode"
+									ng-style="{'color': '#26929c'}" /></td>
+								<td style="vertical-align: middle;"
+									ng-style="{'background-color': '#eef8fc', 'color': '#26929c'}">{{memEntry.relationDesc}}</td>
+
+
+							</tr>
+
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="panel-heading input-sm">
+				<strong><span class="glyphicon glyphicon-th input-sm"></span>
+					Contact Information</strong>
+			</div>
+			<div class="panel-body">
+				<div class="form-group col-sm-12 noPadding" ng-hide="true">
+					<div class="col-sm-12 noPadding">
+						<div class="col-sm-2" style="text-align: right;">
+							<label for="inpMemberPostalAdd" class="control-label input-sm">Postal
+								Add</label>
+						</div>
+						<div class="col-sm-10">
+							<input type="text" class="form-control input-sm"
+								id="inpMemberPostalAdd" placeholder="Postal Address"
+								ng-model="postalAdd">
+						</div>
+					</div>
+
+				</div>
+				<div class="form-group col-sm-12 noPadding" ng-hide="true">
+					<div class="col-sm-12 noPadding">
+						<div class="col-sm-2" style="text-align: right;">
+							<label for="inpMemberPhysicalAdd" class="control-label input-sm">Physical
+								Home Add</label>
+						</div>
+						<div class="col-sm-10">
+							<input type="text" class="form-control input-sm"
+								id="inpMemberPhysicalAdd" placeholder="Physical Home Address"
+								ng-model="physicalAdd">
+						</div>
+					</div>
+
+				</div>
+				<div class="form-group col-sm-12 noPadding">
+					<div class="col-sm-6 noPadding" ng-hide="true">
+						<div class="col-sm-4" style="text-align: right;">
+							<label for="inpMemberHomeTele" class="control-label input-sm">Home
+								Telephone</label>
+						</div>
+						<div class="col-sm-8">
+							<input type="text" class="form-control input-sm"
+								id="inpMemberHomeTele" placeholder="Home Telephone"
+								ng-model="homeTelephone">
+						</div>
+					</div>
+					<div class="col-sm-6 noPadding">
+						<div class="col-sm-4" style="text-align: right;">
+							<label for="inpMemberCellTele" class="control-label input-sm">Cell
+								Phone/Mobile</label>
+						</div>
+						<div class="col-sm-8">
+							<input type="text" class="form-control input-sm"
+								id="inpMemberCellTele" placeholder="Cell Phone/Mobile Phone"
+								ng-model="cellPhone">
+						</div>
+					</div>
+					<div class="col-sm-6 noPadding">
+						<div class="col-sm-4" style="text-align: right;">
+							<label for="inpMemberPhysicalAdd" class="control-label input-sm">
+								Home Add</label>
+						</div>
+						<div class="col-sm-8">
+							<input type="text" class="form-control input-sm"
+								id="inpMemberPhysicalAdd" placeholder="Physical Home Address"
+								ng-model="physicalAdd">
+						</div>
+					</div>
+
+					<div class="col-sm-6 noPadding" ng-hide="true">
+						<div class="col-sm-4" style="text-align: right;">
+							<label for="inpMemberOfficeTelephone"
+								class="control-label input-sm">Office Telephone</label>
+						</div>
+						<div class="col-sm-8">
+							<input type="text" class="form-control input-sm"
+								id="inpMemberOfficeTelephone" placeholder="Office Telephone"
+								ng-model="officeTelephone">
+						</div>
+					</div>
+
+				</div>
+				<div class="form-group col-sm-12 noPadding" ng-hide="true">
+					<div class="col-sm-6 noPadding">
+						<div class="col-sm-4" style="text-align: right;">
+							<label for="inpMemberCellTele" class="control-label input-sm">Cell
+								Phone/Mobile</label>
+						</div>
+						<div class="col-sm-8">
+							<input type="text" class="form-control input-sm"
+								id="inpMemberCellTele" placeholder="Cell Phone/Mobile Phone"
+								ng-model="cellPhone">
+						</div>
+					</div>
+					<div class="col-sm-6 noPadding">
+						<div class="col-sm-4" style="text-align: right;">
+							<label for="inpMemberEmail" class="control-label input-sm">Email</label>
+						</div>
+						<div class="col-sm-8">
+							<input type="text" class="form-control input-sm"
+								id="inpMemberEmail" placeholder="Email" ng-model="email">
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+			<div class="panel-heading input-sm">
+				<strong><span class="glyphicon glyphicon-th input-sm"></span>
+					Programme Information</strong>
+			</div>
+			<div class="panel-body">
+				<div class="form-group col-sm-12 noPadding">
+					<div class="col-sm-12 ">
+						<div class="col-sm-2" style="text-align: left;">
+							<label for="noOfEmployees" class="control-label input-sm">Beneficiary
+								Group </label>
+						</div>
+						<div class="col-sm-10">
+							<select style="width: 100%" ui-select2="" ng-model="bnfGrpSelect"
+								id="bnfGrpSelect">
+								<option data-ng-repeat="bnf in bnfgrps"
+									ng-selected="{{bnf.bnfGrpId}}" value="{{bnf.bnfGrpId}}">{{bnf.bnfGrpName}}</option>
+							</select>
+						</div>
+					</div>
+
+
+				</div>
+				<div class="form-group col-sm-12" ng-hide="showProgrammes"
+					style="max-height: 400px; overflow-y: auto;">
+
+					<table
+						class="table table-bordered table-striped table-responsive input-sm">
+						<thead>
+							<tr>
+								<th><input type="checkbox" ng-model="allItemsSelected"
+									ng-change="selectAllProgrammes()"></th>
+								<th style="width: 10px" ng-hide="true">
+									<div class="th">Id</div>
+								</th>
+								<th>
+									<div class="th">Programme Name</div>
+								</th>
+								<th ng-hide="true">
+									<div class="th">Value</div>
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+
+							<tr data-ng-repeat="programme in programmes">
+								<td><input type="checkbox" ng-model="programme.isActive"
+									ng-checked="programme.isActive"
+									ng-change="selectProgramme($index)"></td>
+								<td ng-hide="true">{{programme.programmeId}}</td>
+								<td>{{programme.programmeDesc}}</td>
+								<td ng-hide="true"><input type="number"
+									class="form-control input-sm" id="inpPrgrammeValue"
+									placeholder="Value" ng-model="programme.programmeValue"></td>
+
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+			</div>
+
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+
+					<button type="button" class="btn btn-info input-sm"
+						style="width: 120px" ng-click="next()">
+						<span class="glyphicon glyphicon-arrow-right"> Next </span>
+					</button>
+					<button type="button" class="btn btn-warning input-sm"
+						style="width: 100px" ng-click="cancelMember()">
+						<span class="glyphicon glyphicon-remove"> Cancel </span>
+					</button>
+				</div>
+
+
+			</div>
+
+		</section>
+
+	</form>
+	<form class="form-horizontal formFadeIn" role="form"
+		ng-hide="photoUploadMode">
+		<section class="panel panel-default table-dynamic">
+			<div class="panel-heading input-sm">
+				<strong><span class="glyphicon glyphicon-th input-sm "></span>
+					Upload Photo</strong>
+
+			</div>
+			<div class="panel-body">
+
+				<div class="form-group col-sm-12 noPadding">
+					<div class="col-sm-12 noPadding">
+
+
+						<div class="col-sm-12">
+
+							<div class="col-sm-4" ng-hide="showCamera" id="my_camera">
+
+								<!-- 								<applet name="camId" id="camId" codebase="." placeholder="no" -->
+								<!-- 									archive="applet/camera-0.1.5-SNAPSHOT.jar" -->
+								<!-- 									code="org.compulynx.webcam.snap.SnapApplet.class" -->
+								<!-- 									alt="Webcam Capture Applet" width="300px" height="250px"> -->
+								<!-- 									<param name="separate_jvm" value="true" /> -->
+								<!-- 								</applet> -->
+							</div>
+							<div class="col-sm-4 ">
+								<img-crop image="myImage" result-image="myCroppedImage"
+									ng-hide="showImage" class="cropArea" ng-hide="capPic"
+									area-type="square"></img-crop>
+							</div>
+
+							<div class="col-sm-4 ">
+								<img ng-src="{{myCroppedImage}}" ng-model="newfile"
+									class="cropArea" ng-hide="capPic" placeholder="Cropped Photo" />
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="form-group col-sm-12 noPadding" ng-hide="true">
+					<div class="col-sm-12 noPadding " ng-hide="showCamera">
+						<div class="col-sm-2" style="text-align: right;">
+							<label for="familySizeSelect" class="control-label input-sm"
+								ng-hide="showCamera">Select Camera</label>
+						</div>
+						<div class="col-sm-10">
+							<select style="width: 100%" ui-select2="" ng-hide="showCamera"
+								ng-model="cams" id="cams">
+								<option data-ng-repeat="camera in cameraList"
+									ng-selected="{{camera.id}}" value="{{camera.id}}">{{obj.name}}</option>
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+
+					<input type="file" title="Upload Photo" id="fileInput"
+						data-ui-file-upload class="btn-primary">
+					<button type="button" class="btn btn-info input-sm" id="showCam"
+						ng-click="showCam()">
+						<span class="glyphicon glyphicon-camera"> Show Cam</span>
+					</button>
+					<button type="button" class="btn btn-primary input-sm"
+						style="width: 120px" id="camLoad" ng-click="take_snapshot()">
+						<span> Capture Pic </span>
+					</button>
+
+				</div>
+
+			</div>
+		</section>
+		<section class="panel panel-default table-dynamic">
+			<div class="panel-body">
+				<div class="form-group col-sm-offset-2 col-sm-10">
+					<button type="button" class="btn btn-info input-sm"
+						style="width: 120px" ng-click="back()">
+						<span class="glyphicon glyphicon-arrow-left"> Back </span>
+					</button>
+					<button type="button" class="btn btn-success input-sm"
+						style="width: 120px" ng-click="updateMember(mem)">
+						<span class="glyphicon glyphicon-ok"> Save </span>
+					</button>
+					<button type="button" class="btn btn-warning input-sm"
+						style="width: 100px" ng-click="cancelMember()">
+						<span class="glyphicon glyphicon-remove"> Cancel </span>
+					</button>
+
+
+				</div>
+			</div>
+		</section>
+	</form>
+
+
+</div>
+
